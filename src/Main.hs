@@ -14,14 +14,11 @@ import Text.Blaze.Html.Renderer.Text as HR
 main :: IO ()
 main = do
   args <- getArgs
-  if getNumFromList 2 args then (TIO.readFile (args !! 0) >>= return . HR.renderHtml  . (template (args !! 0)). (MD.markdown MD.def) >>= TIO.writeFile (args !! 1))
+  if ((2==) . length . take 3) args then (TIO.readFile (args !! 0) >>= return . HR.renderHtml  . (template (args !! 0)). (MD.markdown MD.def) >>= TIO.writeFile (args !! 1))
     else putStrLn "[Usage: m2h <src> <dest>]"
 
-getNumFromList :: Int -> [a] -> Bool
-getNumFromList 0 _      = True
-getNumFromList _ []     = False
-getNumFromList n (_:xs) = getNumFromList (n-1) xs
-
+lengthEqToN :: Int -> [a] -> Bool
+lengthEqToN n = (n==) . length . take (n+1)
 
 template :: String -> H.Html -> H.Html
 template title htm = do
